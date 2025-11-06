@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-  TextInput,
-  Alert,
-} from 'react-native';
+// screens/HomeScreen.js
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList, TextInput, Alert } from 'react-native';
+import { supabase } from '../supabase'; // ✅ Import your supabase client
 
 const companies = [
   { id: '1', name: 'Google' },
@@ -23,15 +16,42 @@ const companies = [
 
 const HomeScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState(null);
   const screenWidth = Dimensions.get('window').width;
   const numColumns = screenWidth < 600 ? 3 : 4;
 
-  // Filter companies based on search input
+  useEffect(() => {
+    // ✅ Check for existing session
+    const getUser = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data?.session) {
+        setUser(data.session.user);
+      } else {
+        setUser(null);
+      }
+    };
+    getUser();
+
+    // ✅ Listen for auth state changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  // Logout
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    Alert.alert('Logged out', 'You have been logged out successfully.');
+    setUser(null);
+  };
+
+  // Filter companies based on search
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Render each company card (clickable)
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
@@ -47,32 +67,47 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {/* ✅ Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        {user ? (
+          <>
+            <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Profile', user.email)}>
+              <Text style={styles.buttonText}>Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Login')}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Signup')}
-        >
-          <Text style={styles.buttonText}>Signup</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Signup')}
+            >
+              <Text style={styles.buttonText}>Signup</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       {/* Hero Section */}
       <View style={styles.hero}>
         <Text style={styles.heroTitle}>Welcome to OnlinePYQ 🚀</Text>
         <Text style={styles.heroSubtitle}>
-          Explore top tech companies, enhance your skills, and prepare for your
-          dream job.
+          Explore top tech companies, enhance your skills, and prepare for your dream job.
         </Text>
 
-        <TouchableOpacity style={styles.ctaButton} onPress={handleExplore}>
+        <TouchableOpacity 
+          style={styles.ctaButton}
+          onPress={handleExplore}
+        >
           <Text style={styles.ctaButtonText}>Explore Now</Text>
         </TouchableOpacity>
       </View>
@@ -95,7 +130,7 @@ const HomeScreen = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
-          key={numColumns} // Forces re-render when layout changes
+          key={numColumns}
           contentContainerStyle={styles.grid}
         />
       </View>
@@ -125,7 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Hero Section
+  // Hero
   hero: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -160,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  // Search Bar
+  // Search
   searchContainer: {
     paddingHorizontal: 16,
     paddingVertical: 10,

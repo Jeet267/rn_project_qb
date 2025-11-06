@@ -38,7 +38,7 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
 
-      {/* ✅ Add Footer at the bottom */}
+
       <Footer />
     </View>
   );

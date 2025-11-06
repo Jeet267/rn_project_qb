@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { supabase } from '../supabase'; // if you used supabase.js, update the extension
+import { supabase } from '../supabase'; 
 
 const SignupScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation }) => {
       });
       if (error) throw error;
 
-      // If email confirmations are ON, user must confirm via email.
+   
       Alert.alert('Check your email', 'Please confirm your email to complete signup.');
       navigation.navigate('Login');
     } catch (err) {

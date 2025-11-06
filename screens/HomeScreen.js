@@ -1,7 +1,7 @@
-// screens/HomeScreen.js
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList, TextInput, Alert } from 'react-native';
-import { supabase } from '../supabase'; // ✅ Import your supabase client
+import { supabase } from '../supabase'; 
 
 const companies = [
   { id: '1', name: 'Google' },
@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
   const numColumns = screenWidth < 600 ? 3 : 4;
 
   useEffect(() => {
-    // ✅ Check for existing session
+
     const getUser = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (data?.session) {
@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
     };
     getUser();
 
-    // ✅ Listen for auth state changes
+
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
@@ -40,14 +40,14 @@ const HomeScreen = ({ navigation }) => {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Logout
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     Alert.alert('Logged out', 'You have been logged out successfully.');
     setUser(null);
   };
 
-  // Filter companies based on search
+
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* ✅ Header */}
+
       <View style={styles.header}>
         {user ? (
           <>
@@ -97,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
         )}
       </View>
 
-      {/* Hero Section */}
+
       <View style={styles.hero}>
         <Text style={styles.heroTitle}>Welcome to OnlinePYQ 🚀</Text>
         <Text style={styles.heroSubtitle}>
@@ -112,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Search Bar */}
+
       <View style={styles.searchContainer}>
         <TextInput
           placeholder="Search company..."
@@ -122,7 +122,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Companies Grid */}
+
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>Top Tech Companies 🏢</Text>
         <FlatList
@@ -141,7 +141,7 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
 
-  // Header
+
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Hero
+
   hero: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  // Search
+
   searchContainer: {
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  // Companies Grid
+
   content: {
     flex: 1,
     alignItems: 'center',

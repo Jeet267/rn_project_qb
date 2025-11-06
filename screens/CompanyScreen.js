@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 const CompanyScreen = ({ route }) => {
   const { companyName } = route.params;
 
-  // Step 1: Sample DSA questions (can later fetch from backend)
+
   const dsaQuestions = [
     { id: '1', question: 'Reverse a linked list in groups of K.' },
     { id: '2', question: 'Find the intersection point of two linked lists.' },
@@ -16,7 +16,7 @@ const CompanyScreen = ({ route }) => {
     { id: '8', question: 'Find the lowest common ancestor (LCA) in a binary tree.' },
   ];
 
-  // Step 2: Render each question using FlatList
+
   const renderQuestion = ({ item }) => (
     <View style={styles.questionBox}>
       <Text style={styles.questionText}>• {item.question}</Text>

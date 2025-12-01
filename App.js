@@ -6,7 +6,8 @@ import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import CompanyScreen from './screens/CompanyScreen';
-import Footer from './screens/Footer'; 
+import CartScreen from './screens/CartScreen';
+import Footer from './screens/Footer';
 
 const Stack = createStackNavigator();
 
@@ -15,29 +16,33 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen 
-            name="Home" 
-            component={HomeScreen} 
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
             options={{ title: 'Home Page' }}
           />
-          <Stack.Screen 
-            name="Login" 
-            component={LoginScreen} 
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
             options={{ title: 'Login' }}
           />
-          <Stack.Screen 
-            name="Signup" 
-            component={SignupScreen} 
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
             options={{ title: 'Signup' }}
           />
-          <Stack.Screen 
-            name="Company" 
-            component={CompanyScreen} 
+          <Stack.Screen
+            name="Company"
+            component={CompanyScreen}
             options={({ route }) => ({ title: route.params.companyName })}
+          />
+          <Stack.Screen
+            name="Cart"
+            component={CartScreen}
+            options={{ title: 'My Cart' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
-
 
       <Footer />
     </View>
@@ -45,7 +50,5 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
 });
